@@ -12,6 +12,7 @@ package logica;
 public class Tiquete {
     Compra compra_id;
     int asiento;
+    Vuelo vuelo_id;
 
     public Tiquete() {
     }
@@ -21,6 +22,20 @@ public class Tiquete {
         this.asiento = asiento;
     }
 
+    public Tiquete(Compra compra_id, int asiento, Vuelo vuelo_id) {
+        this.compra_id = compra_id;
+        this.asiento = asiento;
+        this.vuelo_id = vuelo_id;
+    }
+
+    public Vuelo getVuelo_id() {
+        return vuelo_id;
+    }
+
+    public void setVuelo_id(Vuelo vuelo_id) {
+        this.vuelo_id = vuelo_id;
+    }
+    
     public Compra getCompra_id() {
         return compra_id;
     }

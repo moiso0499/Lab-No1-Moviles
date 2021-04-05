@@ -12,7 +12,7 @@ import java.util.List;
  * @author Moi
  */
 public class Usuario {
-    int id;
+    String id;
     String nombre;
     String apellido;
     String clave;
@@ -24,7 +24,7 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(int id, String nombre, String apellido, String clave, String correo, String direccion, boolean admin) {
+    public Usuario(String id, String nombre, String apellido, String clave, String correo, String direccion, boolean admin) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -34,7 +34,7 @@ public class Usuario {
         this.admin = admin;
     }
 
-    public Usuario(int id, String nombre, String apellido, String clave, String correo, String direccion, boolean admin, List<Compra> compras) {
+    public Usuario(String id, String nombre, String apellido, String clave, String correo, String direccion, boolean admin, List<Compra> compras) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -45,11 +45,11 @@ public class Usuario {
         this.compras = compras;
     }
     
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

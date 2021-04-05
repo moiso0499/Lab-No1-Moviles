@@ -5,7 +5,6 @@
  */
 package datos;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +16,8 @@ import logica.Tipoavion;
  */
 public class Dao_tipoavion extends Dao{
 
-    public Dao_tipoavion() {
-    }
     
-    
-    
-    public void insertarTipoavion(Tipoavion t) throws Exception { //Sin probar aún
+    public static void insertarTipoavion(Tipoavion t) throws Exception { //NP
         
         cs = con.prepareCall("{call insertar_tipoavion(?,?,?,?)}");
         cs.setInt(1, t.getAnyo());
@@ -33,7 +28,7 @@ public class Dao_tipoavion extends Dao{
         
     }
     
-    public List<Tipoavion> obtenerListaTipoavion() throws Exception {
+    public static List<Tipoavion> obtenerListaTipoavion() throws Exception { //NP
         List<Tipoavion> result = new ArrayList<>();
         cs = con.prepareCall("{call mostrar_tipoaviones()}");
         rs = cs.executeQuery();
@@ -43,8 +38,25 @@ public class Dao_tipoavion extends Dao{
         return result;
     }
     
+    public static Tipoavion obtenerTipoavion_id(int id) throws Exception { //NP
+        Tipoavion result = null;
+        cs = con.prepareCall("{call obtener_tipoavion(?)}");
+        cs.setInt(1, id);
+        rs = cs.executeQuery();
+        if(rs.next()){
+            result = rs_tipoavion(rs);
+        }
+        return result;
+    }
     
-    private Tipoavion rs_tipoavion(ResultSet rs){
+    public static void eliminarTipoavion_id(int id) throws Exception { //NP
+        cs = con.prepareCall("{call eliminar_tipoavion(?)}");
+        cs.setInt(1, id);
+        cs.executeUpdate();
+    }
+    
+    
+    private static Tipoavion rs_tipoavion(ResultSet rs){ //NP
         try{
             Tipoavion t = new Tipoavion();
             t.setId(rs.getInt(1));

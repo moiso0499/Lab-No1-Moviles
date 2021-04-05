@@ -17,11 +17,8 @@ import java.sql.Statement;
 public class Dao {
     static protected CallableStatement cs;
     static protected Statement st;
-    static protected Connection con;
+    static protected Connection con = Conn.getCon();
     static protected ResultSet rs;
 
-    public Dao() {
-        con = Conn.getCon();
-    }
 
 }
