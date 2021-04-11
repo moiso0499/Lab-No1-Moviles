@@ -20,5 +20,4 @@ public class Dao {
     static protected Connection con = Conn.getCon();
     static protected ResultSet rs;
 
-
 }

@@ -7,6 +7,7 @@ package datos;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 
 /**
@@ -20,9 +21,8 @@ public class Conn {
     private static void conectar() {
         try {
             // Se debe cambiar a futuro para ocultar las credenciales
-            con =  DriverManager.getConnection("jdbc:mysql://localhost:3306/aerolinea?user=root&password=root&useSSL=false");
-        } catch (Exception e) {
-            e.printStackTrace();
+            con =  DriverManager.getConnection("jdbc:mysql://localhost:3306/aerolinea?useTimezone=true&serverTimezone=UTC&user=root&password=root&useSSL=false");
+        } catch (SQLException e) {
         }
     }
     

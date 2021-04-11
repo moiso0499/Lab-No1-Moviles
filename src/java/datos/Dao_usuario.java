@@ -58,7 +58,7 @@ public class Dao_usuario extends Dao {
     
     public static Usuario obtenerUsuario_id(String id) throws Exception {
         Usuario result = null;
-        cs = con.prepareCall(OBTENER);
+        cs = con.prepareCall("{call obtener_usuario('?')}");
         cs.setString(1, id);
         rs = cs.executeQuery();
         if(rs.next()){
