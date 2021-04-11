@@ -5,6 +5,8 @@
  */
 package datos;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,30 +17,35 @@ import logica.Avion;
  * @author Moi
  */
 public class Dao_avion extends Dao {
-
+    
     public static void insertarAvion(Avion a) throws Exception {
-        
-        cs = con.prepareCall("{call insertar_avion(?,?)}");
-        cs.setInt(1, a.getTipoAvion_id().getId());
-        cs.setInt(2, a.getRuta_id().getId());
+        Connection connection = Conn.conectar();
+        String call = INSERTAR;
+        call = String.format(call, a.getTipoAvion_id().getId(), a.getRuta_id().getId());
+        CallableStatement cs = connection.prepareCall(call);
         cs.executeUpdate();
     } 
     
+    
     public static List<Avion> obtenerListaAvion() throws Exception {
+        Connection connection = Conn.conectar();
         List<Avion> result = new ArrayList<>();
-        cs = con.prepareCall("{call mostrar_aviones()}");
-        rs = cs.executeQuery();
+        CallableStatement cs = connection.prepareCall(LISTA);
+        ResultSet rs = cs.executeQuery();
         while(rs.next()){
             result.add(rs_avion(rs));
         }
         return result;
     }
     
+   
     public static Avion obtenerAvion_id(int id) throws Exception {
+        Connection connection = Conn.conectar();
         Avion result = null;
-        cs = con.prepareCall("{call obtener_avion(?)}");
-        cs.setInt(1, id);
-        rs = cs.executeQuery();
+        String call = OBTENER;
+        call = String.format(call, id);
+        CallableStatement cs = connection.prepareCall(call);
+        ResultSet rs = cs.executeQuery();
         if(rs.next()){
             result = rs_avion(rs);
         }
@@ -46,8 +53,10 @@ public class Dao_avion extends Dao {
     }
     
     public static void eliminarAvion_id(int id) throws Exception{
-        cs = con.prepareCall("{call eliminar_avion(?)}");
-        cs.setInt(1, id);
+        Connection connection = Conn.conectar();
+        String call = ELIMINAR;
+        call = String.format(call,id);
+        CallableStatement cs = connection.prepareCall(call);
         cs.executeUpdate();
     }
     
@@ -67,4 +76,9 @@ public class Dao_avion extends Dao {
             return null;
         }
     }
+    
+    private static final String INSERTAR = "{call insertar_avion(%s,%s)}";
+    private static final String LISTA = "{call mostrar_aviones()}";
+    private static final String OBTENER = "{call obtener_avion(%s)}";
+    private static final String ELIMINAR = "{call eliminar_avion(%s)}";
 }

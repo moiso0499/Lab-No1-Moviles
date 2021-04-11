@@ -5,6 +5,8 @@
  */
 package datos;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,16 +19,17 @@ import logica.Ubicacion;
  */
 public class Dao_ubicacion extends Dao {
     public static void insertarUbicacion(Ubicacion u) throws Exception {
-        cs = con.prepareCall(INSERTAR);
-        cs.setString(1,u.getCodigo());
-        cs.setString(2,u.getDescripcion());
+        Connection connection = Conn.conectar();
+        String call = String.format(INSERTAR, u.getCodigo(),u.getDescripcion());
+        CallableStatement cs = connection.prepareCall(call);
         cs.executeUpdate();
     }
     
     public static List<Ubicacion> obtenerListaUbicacion() throws Exception {
+        Connection connection = Conn.conectar();
         List<Ubicacion> result = new ArrayList<>();
-        cs = con.prepareCall(LISTA);
-        rs = cs.executeQuery();
+        CallableStatement cs = connection.prepareCall(LISTA);
+        ResultSet rs = cs.executeQuery();
         while(rs.next()){
             result.add(rs_ubicacion(rs));
         }
@@ -34,10 +37,11 @@ public class Dao_ubicacion extends Dao {
     }
     
     public static Ubicacion obtenerUbicacion_codigo(String codigo) throws Exception {
+        Connection connection = Conn.conectar();
         Ubicacion result = null;
-        cs = con.prepareCall(OBTENER);
-        cs.setString(1,codigo);
-        rs = cs.executeQuery();
+        String call = String.format(OBTENER, codigo);
+        CallableStatement cs = connection.prepareCall(call);
+        ResultSet rs = cs.executeQuery();
         if(rs.next()){
             result = rs_ubicacion(rs);
         }
@@ -45,8 +49,9 @@ public class Dao_ubicacion extends Dao {
     }
     
     public static void eliminarUbicacion_codigo(String codigo) throws Exception {
-        cs = con.prepareCall(ELIMINAR);
-        cs.setString(1,codigo);
+        Connection connection = Conn.conectar();
+        String call = String.format(ELIMINAR, codigo);
+        CallableStatement cs = connection.prepareCall(call);
         cs.executeUpdate();
     }
     
@@ -62,8 +67,8 @@ public class Dao_ubicacion extends Dao {
         }
     }
     
-    private static final String INSERTAR = "{call insertar_ubicacion(?,?)}";
+    private static final String INSERTAR = "{call insertar_ubicacion('%s','%s')}";
     private static final String LISTA = "{call mostrar_ubicaciones()}";
-    private static final String OBTENER = "{call obtener_ubicacion(?)}";
-    private static final String ELIMINAR = "{call eliminar_ubicacion(?)}";
+    private static final String OBTENER = "{call obtener_ubicacion('%s')}";
+    private static final String ELIMINAR = "{call eliminar_ubicacion('%s')}";
 }

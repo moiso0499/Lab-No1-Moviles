@@ -5,19 +5,15 @@
  */
 package datos;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 /**
  *
  * @author Moi
  */
 public class Dao {
-    static protected CallableStatement cs;
-    static protected Statement st;
-    static protected Connection con = Conn.getCon();
-    static protected ResultSet rs;
-
+static Conn con;
+    
+    public Dao(){
+        con = new Conn();
+    }
 }

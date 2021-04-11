@@ -5,8 +5,9 @@
  */
 package datos;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import logica.Ruta;
@@ -18,18 +19,17 @@ import logica.Ruta;
 public class Dao_ruta extends Dao {
     
     public static void insertarRuta(Ruta r) throws Exception {
-        
-        cs = con.prepareCall(INSERTAR);
-        cs.setTime(1, Time.valueOf(r.getDuracion())); //Parsea de java a sql
-        cs.setString(2,r.getOrigen().getCodigo());
-        cs.setString(2, r.getDestino().getCodigo());
+        Connection connection = Conn.conectar();
+        String call = String.format(INSERTAR, r.getDuracion(),r.getOrigen().getCodigo(),r.getDestino().getCodigo());
+        CallableStatement cs = connection.prepareCall(call);
         cs.executeUpdate();
     }
     
     public static List<Ruta> obtenerListaRuta() throws Exception {
+        Connection connection = Conn.conectar();
         List<Ruta> result = new ArrayList<>();
-        cs = con.prepareCall(LISTA);
-        rs = cs.executeQuery();
+        CallableStatement cs = connection.prepareCall(LISTA);
+        ResultSet rs = cs.executeQuery();
         while(rs.next()){
             result.add(rs_ruta(rs));
         }
@@ -37,10 +37,11 @@ public class Dao_ruta extends Dao {
     }
     
     public static Ruta obtenerRuta_id(int id) throws Exception {
+        Connection connection = Conn.conectar();
         Ruta result = null;
-        cs = con.prepareCall(OBTENER);
-        cs.setInt(1, id);
-        rs = cs.executeQuery();
+        String call = String.format(OBTENER, id);
+        CallableStatement cs = connection.prepareCall(call);
+        ResultSet rs = cs.executeQuery();
         if(rs.next()){
             result = rs_ruta(rs);
         }
@@ -48,8 +49,9 @@ public class Dao_ruta extends Dao {
     }
     
     public static void eliminarRuta_id(int id) throws Exception {
-        cs = con.prepareCall(ELIMINAR);
-        cs.setInt(1,id);
+        Connection connection = Conn.conectar();
+        String call = String.format(ELIMINAR, id);
+        CallableStatement cs = connection.prepareCall(call);
         cs.executeUpdate();
     }
         
@@ -69,8 +71,8 @@ public class Dao_ruta extends Dao {
         }
     }
     
-    private static final String INSERTAR = "{call insertar_ruta(?,?,?)}";
+    private static final String INSERTAR = "{call insertar_ruta('%s','%s','%s')}";
     private static final String LISTA = "{call mostrar_rutas()}";
-    private static final String OBTENER = "{call obtener_ruta(?)}";
-    private static final String ELIMINAR = "{call eliminar_ruta(?)}";
+    private static final String OBTENER = "{call obtener_ruta(%s)}";
+    private static final String ELIMINAR = "{call eliminar_ruta(%s)}";
 }

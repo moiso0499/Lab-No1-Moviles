@@ -5,7 +5,10 @@
  */
 package datos;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import logica.Tipoavion;
@@ -18,20 +21,17 @@ public class Dao_tipoavion extends Dao{
 
     
     public static void insertarTipoavion(Tipoavion t) throws Exception { //NP
-        
-        cs = con.prepareCall("{call insertar_tipoavion(?,?,?,?)}");
-        cs.setInt(1, t.getAnyo());
-        cs.setString(2,t.getModelo());
-        cs.setInt(3, t.getFilas());
-        cs.setInt(4, t.getAsientos_fila());
+        Connection connection = Conn.conectar();
+        String call = String.format(INSERTAR, t.getAnyo(),t.getModelo(),t.getFilas(),t.getAsientos_fila());
+        CallableStatement cs = connection.prepareCall(call);
         cs.executeUpdate();
-        
     }
     
     public static List<Tipoavion> obtenerListaTipoavion() throws Exception { //NP
+        Connection connection = Conn.conectar();
         List<Tipoavion> result = new ArrayList<>();
-        cs = con.prepareCall("{call mostrar_tipoaviones()}");
-        rs = cs.executeQuery();
+        CallableStatement cs = connection.prepareCall(LISTA);
+        ResultSet rs = cs.executeQuery();
         while(rs.next()){
             result.add(rs_tipoavion(rs));
         }
@@ -39,10 +39,11 @@ public class Dao_tipoavion extends Dao{
     }
     
     public static Tipoavion obtenerTipoavion_id(int id) throws Exception { //NP
+        Connection connection = Conn.conectar();
         Tipoavion result = null;
-        cs = con.prepareCall("{call obtener_tipoavion(?)}");
-        cs.setInt(1, id);
-        rs = cs.executeQuery();
+        String call = String.format(OBTENER, id);
+        CallableStatement cs = connection.prepareCall(call);
+        ResultSet rs = cs.executeQuery();
         if(rs.next()){
             result = rs_tipoavion(rs);
         }
@@ -50,11 +51,11 @@ public class Dao_tipoavion extends Dao{
     }
     
     public static void eliminarTipoavion_id(int id) throws Exception { //NP
-        cs = con.prepareCall("{call eliminar_tipoavion(?)}");
-        cs.setInt(1, id);
+        Connection connection = Conn.conectar();
+        String call = String.format(ELIMINAR, id);
+        CallableStatement cs = connection.prepareCall(call);
         cs.executeUpdate();
     }
-    
     
     private static Tipoavion rs_tipoavion(ResultSet rs){ //NP
         try{
@@ -66,8 +67,13 @@ public class Dao_tipoavion extends Dao{
             t.setAsientos_fila(5);
             return t;
         }
-        catch(Exception e){
+        catch(SQLException e){
             return null;
         }
     }
+    
+        private static final String INSERTAR = "{call insertar_tipoavion(%s,'%s',%s,%s)}";
+        private static final String LISTA = "{call mostrar_tipoaviones()}";
+        private static final String OBTENER = "{call obtener_tipoavion(%s)}";
+        private static final String ELIMINAR = "{call eliminar_tipoavion(%s)}";
 }

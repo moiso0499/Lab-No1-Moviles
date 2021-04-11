@@ -14,11 +14,13 @@ import logica.Usuario;
  */
 public class Controller {
     
+    datos.Dao_usuario dao = new datos.Dao_usuario();
+    
     public String existeUsuario(String json){
         Gson gson = new Gson();
         try {
             Usuario usuario = gson.fromJson(json, Usuario.class);
-            Usuario usuario_db = datos.Dao_usuario.obtenerUsuario_id(usuario.getId());
+            Usuario usuario_db = dao.obtenerUsuario_id(usuario.getId());
             if (usuario.getId().equals(usuario_db.getId()) && usuario.getClave().equals(usuario_db.getClave())){
                 return gson.toJson(true);
             }

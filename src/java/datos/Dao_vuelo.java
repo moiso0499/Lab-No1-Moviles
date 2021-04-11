@@ -5,10 +5,9 @@
  */
 package datos;
 
-import java.sql.Date;
+import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.Time;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import logica.Vuelo;
@@ -20,18 +19,17 @@ import logica.Vuelo;
 public class Dao_vuelo extends Dao {
     
     public static void insertarVuelo(Vuelo v) throws Exception {
-        cs = con.prepareCall(INSERTAR);
-        cs.setDate(1, Date.valueOf(v.getFecha()));
-        cs.setTime(2, Time.valueOf(v.getHora_salida()));
-        cs.setDouble(3, v.getPrecio());
-        cs.setInt(4, v.getAvion_id().getId());
+        Connection connection = Conn.conectar();
+        String call = String.format(INSERTAR, v.getFecha(),v.getHora_salida(),v.getPrecio(),v.getAvion_id().getId());
+        CallableStatement cs = connection.prepareCall(call);
         cs.executeUpdate();
     }
     
     public static List<Vuelo> obtenerListaVuelo() throws Exception {
+        Connection connection = Conn.conectar();
         List<Vuelo> result = new ArrayList<>();
-        cs = con.prepareCall(LISTA);
-        rs = cs.executeQuery();
+        CallableStatement cs = connection.prepareCall(LISTA);
+        ResultSet rs = cs.executeQuery();
         while(rs.next()){
             result.add(rs_vuelo(rs));
         }
@@ -39,10 +37,11 @@ public class Dao_vuelo extends Dao {
     }
     
     public static Vuelo obtenerVuelo_id(int id) throws Exception {
+        Connection connection = Conn.conectar();
         Vuelo result = null;
-        cs = con.prepareCall(OBTENER);
-        cs.setInt(1, id);
-        rs = cs.executeQuery();
+        String call = String.format(OBTENER, id);
+        CallableStatement cs = connection.prepareCall(call);
+        ResultSet rs = cs.executeQuery();
         if(rs.next()){
             result = rs_vuelo(rs);
         }
@@ -50,8 +49,9 @@ public class Dao_vuelo extends Dao {
     }
     
     public static void eliminarVuelo_id(int id) throws Exception {
-        cs = con.prepareCall(ELIMINAR);
-        cs.setInt(1,id);
+        Connection connection = Conn.conectar();
+        String call = String.format(ELIMINAR, id);
+        CallableStatement cs = connection.prepareCall(call);
         cs.executeUpdate();
     }
     
@@ -72,8 +72,8 @@ public class Dao_vuelo extends Dao {
         }
     }
     
-    private static final String INSERTAR = "{call insertar_vuelo(?,?,?,?)}";
+    private static final String INSERTAR = "{call insertar_vuelo('%s','%s',%s,%s)}";
     private static final String LISTA = "{call mostrar_vuelos()}";
-    private static final String OBTENER = "{call obtener_vuelo(?)}";
-    private static final String ELIMINAR = "{call eliminar_vuelo(?)}";
+    private static final String OBTENER = "{call obtener_vuelo(%s)}";
+    private static final String ELIMINAR = "{call eliminar_vuelo(%s)}";
 }

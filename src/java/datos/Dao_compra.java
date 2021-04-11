@@ -5,6 +5,8 @@
  */
 package datos;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,16 +19,18 @@ import logica.Compra;
 public class Dao_compra extends Dao {
     
     public static void insertarCompra(Compra c) throws Exception {
-        cs = con.prepareCall(INSERTAR);
-        cs.setString(1, c.getUsuario_id().getId());
-        cs.setInt(2, c.getVuelo_id().getId());
+        Connection connection = Conn.conectar();
+        String call = INSERTAR;
+        call = String.format(call, c.getUsuario_id().getId(),c.getVuelo_id().getId());
+        CallableStatement cs = connection.prepareCall(call);
         cs.executeUpdate();
     }
     
     public static List<Compra> obtenerListaCompra() throws Exception {
+        Connection connection = Conn.conectar();
         List<Compra> result = new ArrayList<>();
-        cs = con.prepareCall(LISTA);
-        rs = cs.executeQuery();
+        CallableStatement cs = connection.prepareCall(LISTA);
+        ResultSet rs = cs.executeQuery();
         while(rs.next()){
             result.add(rs_compra(rs));
         }
@@ -34,10 +38,12 @@ public class Dao_compra extends Dao {
     }
     
     public static List<Compra> obtenerCompras_vuelo(int id) throws Exception {
+        Connection connection = Conn.conectar();
         List<Compra> result = new ArrayList<>();
-        cs = con.prepareCall(COMPRAS_VUELO);
-        cs.setInt(1, id);
-        rs = cs.executeQuery();
+        String call = COMPRAS_VUELO;
+        call = String.format(call, id);
+        CallableStatement cs = connection.prepareCall(call);
+        ResultSet rs = cs.executeQuery();
         while(rs.next()){
             result.add(rs_compra(rs));
         }
@@ -45,10 +51,11 @@ public class Dao_compra extends Dao {
     }
     
     public static List<Compra> obtenerCompras_usuario(String id) throws Exception {
+        Connection connection = Conn.conectar();
         List<Compra> result = new ArrayList<>();
-        cs = con.prepareCall(COMPRAS_USUARIO);
-        cs.setString(1, id);
-        rs = cs.executeQuery();
+        String call = String.format(COMPRAS_USUARIO,id);
+        CallableStatement cs = connection.prepareCall(call);
+        ResultSet rs = cs.executeQuery();
         while(rs.next()){
             result.add(rs_compra(rs));
         }
@@ -56,10 +63,11 @@ public class Dao_compra extends Dao {
     }
     
     public static Compra obtenerCompra_id(int id) throws Exception {
+        Connection connection = Conn.conectar();
         Compra result = null;
-        cs = con.prepareCall(OBTENER);
-        cs.setInt(1, id);
-        rs = cs.executeQuery();
+        String call = String.format(OBTENER, id);
+        CallableStatement cs = connection.prepareCall(call);
+        ResultSet rs = cs.executeQuery();
         if(rs.next()){
             result = rs_compra(rs);
         }
@@ -67,8 +75,9 @@ public class Dao_compra extends Dao {
     }
     
     public static void eliminarCompra_id(int id) throws Exception {
-        cs  = con.prepareCall(ELIMINAR);
-        cs.setInt(1, id);
+        Connection connection = Conn.conectar();
+        String call = String.format(ELIMINAR, id);
+        CallableStatement cs = connection.prepareCall(call);
         cs.executeUpdate();
     }
     
@@ -87,10 +96,10 @@ public class Dao_compra extends Dao {
         }
     }
     
-    private static final String INSERTAR = "{call insertar_compra(?,?)}";
+    private static final String INSERTAR = "{call insertar_compra('%s',%s)}";
     private static final String LISTA = "{call mostrar_compras()}";
-    private static final String COMPRAS_USUARIO = "{call compras_usuario(?)}";
-    private static final String COMPRAS_VUELO = "{call compras_vuelo(?)}";
-    private static final String OBTENER = "{call obtener_compra(?)}";
-    private static final String ELIMINAR = "{call eliminar_compra(?)}";
+    private static final String COMPRAS_USUARIO = "{call compras_usuario('%s')}";
+    private static final String COMPRAS_VUELO = "{call compras_vuelo(%s)}";
+    private static final String OBTENER = "{call obtener_compra(%s)}";
+    private static final String ELIMINAR = "{call eliminar_compra(%s)}";
 }

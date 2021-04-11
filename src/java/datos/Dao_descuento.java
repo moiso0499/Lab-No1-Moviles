@@ -5,6 +5,8 @@
  */
 package datos;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,16 +19,17 @@ import logica.Descuento;
 public class Dao_descuento extends Dao {
     
     public static void insertarDescuento(Descuento d) throws Exception {
-        cs = con.prepareCall(INSERTAR);
-        cs.setInt(1, d.getVuelo_id().getId());
-        cs.setDouble(2, d.getPorcentaje());
+        Connection connection = Conn.conectar();
+        String call = String.format(INSERTAR, d.getVuelo_id().getId(),d.getPorcentaje());
+        CallableStatement cs = connection.prepareCall(call);
         cs.executeUpdate();
     }
     
     public static List<Descuento> obtenerListaDescuento() throws Exception {
+        Connection connection = Conn.conectar();
         List<Descuento> result = new ArrayList<>();
-        cs = con.prepareCall(LISTA);
-        rs = cs.executeQuery();
+        CallableStatement cs = connection.prepareCall(LISTA);
+        ResultSet rs = cs.executeQuery();
         while(rs.next()){
             result.add(rs_descuento(rs));
         }
@@ -34,10 +37,11 @@ public class Dao_descuento extends Dao {
     }
     
     public static List<Descuento> obtenerListaDescuento_vuelo(int id) throws Exception {
+        Connection connection = Conn.conectar();
         List<Descuento> result = new ArrayList<>();
-        cs = con.prepareCall(DESCUENTOS_VUELO);
-        cs.setInt(1, id);
-        rs = cs.executeQuery();
+        String call = String.format(DESCUENTOS_VUELO, id);
+        CallableStatement cs = connection.prepareCall(call);
+        ResultSet rs = cs.executeQuery();
         while(rs.next()){
             result.add(rs_descuento(rs));
         }
@@ -45,10 +49,11 @@ public class Dao_descuento extends Dao {
     }
     
     public static Descuento obtenerDescuento_id(int id) throws Exception {
+        Connection connection = Conn.conectar();
         Descuento result = null;
-        cs = con.prepareCall(OBTENER);
-        cs.setInt(1, id);
-        rs = cs.executeQuery();
+        String call = String.format(OBTENER, id);
+        CallableStatement cs = connection.prepareCall(call);
+        ResultSet rs = cs.executeQuery();
         if(rs.next()){
             result = rs_descuento(rs);
         }
@@ -56,8 +61,9 @@ public class Dao_descuento extends Dao {
     }
     
     public static void eliminarDescuento_id(int id) throws Exception {
-        cs = con.prepareCall(ELIMINAR);
-        cs.setInt(id, id);
+        Connection connection = Conn.conectar();
+        String call = String.format(ELIMINAR, id);
+        CallableStatement cs = connection.prepareCall(call);
         cs.executeUpdate();
     }
     
@@ -77,9 +83,9 @@ public class Dao_descuento extends Dao {
     }
     
     
-    private static final String INSERTAR = "{call insertar_descuento(?,?)}";
+    private static final String INSERTAR = "{call insertar_descuento(%s,%s)}";
     private static final String LISTA = "{call mostrar_descuentos()}";
-    private static final String DESCUENTOS_VUELO = "{call descuentos_vuelo(?)}";
-    private static final String OBTENER = "{call obtener_descuento(?)}";
-    private static final String ELIMINAR = "{call eliminar_descuento(?)}";
+    private static final String DESCUENTOS_VUELO = "{call descuentos_vuelo(%S)}";
+    private static final String OBTENER = "{call obtener_descuento(%s)}";
+    private static final String ELIMINAR = "{call eliminar_descuento(%s)}";
 }

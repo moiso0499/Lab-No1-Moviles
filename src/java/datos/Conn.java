@@ -16,20 +16,13 @@ import java.sql.SQLException;
  */
 public class Conn {
     
-    private static Connection con = null;
-
-    private static void conectar() {
+    public static Connection conectar() throws Exception {
         try {
-            // Se debe cambiar a futuro para ocultar las credenciales
-            con =  DriverManager.getConnection("jdbc:mysql://localhost:3306/aerolinea?useTimezone=true&serverTimezone=UTC&user=root&password=root&useSSL=false");
-        } catch (SQLException e) {
+            return DriverManager.getConnection("jdbc:mysql://localhost:3306/aerolinea?user=root&password=root&useSSL=false");
+        } catch (SQLException ex) {
+            System.out.println(ex.toString());
+            return null;
         }
-    }
-    
-    public static Connection getCon(){
-        if(con == null){
-            conectar();
-        }
-        return con;
+
     }
 }
