@@ -10,21 +10,6 @@
     <head>
         <%@include file="/parciales/head.jsp" %>
         <title>Inicio de sesión</title>
-        <style>
-            .myForm {
-                width: 50%;
-                padding:10px;
-                border:1px solid #eee;
-                margin:10px;
-                margin-left: 25%;
-                background-color: lightgray;
-            }
-            
-            .myTitle {
-                margin-bottom: 20px;
-                margin-left: 25%;
-            }
-        </style>
     </head>
     <body>
         <%@include file="/parciales/navbar.jsp" %>
@@ -55,7 +40,10 @@
         });
         
         websocket.addEventListener('message',function(event){
-            alert(event.data);
+            if(event.data !== null){
+                sessionStorage.setItem('logueado',event.data);
+                location.replace('exito.jsp');
+            }
         });
         
         function load(event){
@@ -71,9 +59,6 @@
             });
         }
         
-        function writeResponse(data){
-            document.getElementById("demo").innerHTML = data.id;
-        }
         
         $(load);
     </script>    

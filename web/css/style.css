@@ -11,3 +11,21 @@ and open the template in the editor.
 .clear {
     clear:both;
 }
+
+#navbarIcon {
+    height: 60px;
+}
+
+.myForm {
+                width: 50%;
+                padding:10px;
+                border:1px solid #eee;
+                margin:10px;
+                margin-left: 25%;
+                background-color: lightgray;
+            }
+            
+            .myTitle {
+                margin-bottom: 20px;
+                margin-left: 25%;
+            }

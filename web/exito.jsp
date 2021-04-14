@@ -14,6 +14,7 @@
     <body>
         <%@include file="/parciales/navbar.jsp" %>
         <h1>Exito</h1>
+        
         <%@include file="/parciales/footer.jsp" %>
     </body>
 </html>

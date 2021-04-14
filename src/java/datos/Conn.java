@@ -18,7 +18,15 @@ public class Conn {
     
     public static Connection conectar() throws Exception {
         try {
-            return DriverManager.getConnection("jdbc:mysql://localhost:3306/aerolinea?user=root&password=root&useSSL=false");
+            String driver = "com.mysql.cj.jdbc.Driver";
+            String server = "localhost";
+            String port = "3306";
+            String user = "root";
+            String password = "root";
+            String database = "aerolinea";
+            String URL_conexion="jdbc:mysql://"+ server+":"+port+"/"+database+"?useTimezone=true&serverTimezone=UTC&user="+user+"&password="+password+"&useSSL=false";
+            Class.forName(driver).newInstance();
+            return DriverManager.getConnection(URL_conexion);
         } catch (SQLException ex) {
             System.out.println(ex.toString());
             return null;
