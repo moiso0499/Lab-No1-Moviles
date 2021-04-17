@@ -6,9 +6,11 @@
 package presentacion.tipoavion;
 
 import com.google.gson.Gson;
+import datos.Dao_avion;
 import datos.Dao_ruta;
 import datos.Dao_tipoavion;
 import java.util.List;
+import logica.Avion;
 import logica.Ruta;
 import logica.Tipoavion;
 /**
@@ -36,6 +38,26 @@ public class Controller {
             return json;
         } catch (Exception e) {
             return gson.toJson(null);
+        }
+    }
+    
+    public String enviarListaAvion(){
+        Gson gson = new Gson();
+        try {
+            List<Avion> lista = Dao_avion.obtenerListaAvion();
+            String json = "{\"codigo\": 3, \"lista\": " +gson.toJson(lista)+"}";
+            return json;
+        } catch (Exception e) {
+            return gson.toJson(null);
+        }
+    }
+    
+    public void agregarAvion(String data){
+        Gson gson = new Gson();
+        try {
+            Avion avion = gson.fromJson(data, Avion.class);
+            Dao_avion.insertarAvion(avion);
+        } catch (Exception e) {
         }
     }
     

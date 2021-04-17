@@ -3,36 +3,33 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package presentacion.tipoavion;
+package presentacion.vuelo;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.util.Map;
 import org.json.simple.JSONObject;
 
 /**
  *
  * @author Moi
  */
-@ServerEndpoint("/tipoavion")
-public class Socket_tipoavion {
+@ServerEndpoint("/vuelo")
+public class Socket_vuelo {
 
     Controller controller = new Controller();
 
     @OnOpen
     public void onOpen(Session session) {
-        System.out.println("Socket_tipoavion: " + session.getId() + " nueva conexion");
+        System.out.println("Socket_vuelo: " + session.getId() + " nueva conexion");
         try {
-            session.getBasicRemote().sendText(controller.enviarListaTipoAvion());
-            session.getBasicRemote().sendText(controller.enviarListaRuta());
             session.getBasicRemote().sendText(controller.enviarListaAvion());
-        } catch (IOException e) {
+            session.getBasicRemote().sendText(controller.enviarListaVuelo());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -45,24 +42,16 @@ public class Socket_tipoavion {
             JSONObject req = new JSONObject(map);
             String action = req.get("action").toString();
             switch (action) {
-                case "agregarTipoavion": {
-                    controller.agregarTipoavion(req.get("data").toString());
-                    session.getBasicRemote().sendText(controller.enviarListaTipoAvion());
-                    break;
-                }
-                case "agregarAvion":{
-                    controller.agregarAvion(req.get("data").toString());
-                    session.getBasicRemote().sendText(controller.enviarListaAvion());
-                    break;
+                case "agregarVuelo": {
+                    controller.agregarVuelo(req.get("data").toString(), req.get("date").toString(), req.get("time").toString());
                 }
             }
         } catch (Exception e) {
-
         }
     }
 
     @OnClose
     public void onClose(Session session) {
-        System.out.println("Socket_tipoavion: Sesion " + session.getId() + " terminada");
+        System.out.println("Socket_vuelo: Sesion " + session.getId() + " terminada");
     }
 }

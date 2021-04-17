@@ -23,7 +23,7 @@
                             <a class="nav-link js-scroll-trigger" href="ruta.jsp">Rutas</a>
                         </li>
                         <li class="nav-item" id="navbar_li_flights">
-                            <a class="nav-link js-scroll-trigger" href="#">Vuelos</a>
+                            <a class="nav-link js-scroll-trigger" href="vuelo.jsp">Vuelos</a>
                         </li>
                         <!-- ********************** -->
                         <li class="nav-item" id="navbar_li_login">

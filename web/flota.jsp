@@ -47,6 +47,9 @@
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#tab_newPlane">Agregar Avión</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#tab_PlaneList">Ver Avión</a>
+                </li>
             </ul>
 
             <!-- Tab panes -->
@@ -200,12 +203,54 @@
                             <div class="form-group">
                                 <label class="col-md-4 control-label" for="button_agregarAvion"></label>
                                 <div class="col-md-4">
-                                    <button id="button_agregarAvion" name="button_agregarAvion" class="btn btn-success">Agregar</button>
+                                    <button id="button_agregarAvion" name="button_agregarAvion" class="btn btn-success" onclick="agregarAvion()">Agregar</button>
                                 </div>
                             </div>
 
                         </fieldset>
                     </form>
+                </div>
+                <div id="tab_PlaneList" class="container tab-pane fade"><br>
+                    <h3>Ver Tipos de Aviones</h3>
+                    <div class="table-responsive">
+                        <table id="dtAvion" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th class="th-sm">Id
+
+                                    </th>
+                                    <th class="th-sm">Modelo
+
+                                    </th>
+                                    <th class="th-sm">Cantidad de asientos
+
+                                    </th>
+                                    <th class="th-sm">Ruta
+
+                                    </th>
+                                    <th class="th-sm">Duración Ruta
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Id
+                                    </th>
+                                    <th>Modelo
+                                    </th>
+                                    <th>Cantidad de asientos
+                                    </th>
+                                    <th>Ruta
+                                    </th>
+                                    <th>Duración Ruta
+                                    </th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -230,9 +275,26 @@
                 case 2:
                 {
                     renderSelectRuta(mensaje.lista);
+                    break;
+                }
+                case 3:
+                {
+                    $("#dtAvion > body").html("");
+                    renderListaAvion(mensaje.lista);
+                    $('#dtAvion').DataTable();
+                    $('.dataTables_length').addClass('bs-select');
+                    break;
                 }
             }
         });
+
+        function agregarAvion() {
+            var select_tipoavion = $("#select_tipoavion option:selected").val();
+            var select_ruta = $("#select_ruta option:selected").val();
+            var avion = {tipoAvion_id: {id: select_tipoavion}, ruta_id: {id: select_ruta}};
+            var message = {action: "agregarAvion", data: avion};
+            websocket.send(JSON.stringify(message));
+        }
 
         function agregarTipoavion() {
             var input_modelo = $("#input_modelo").val();
@@ -261,6 +323,30 @@
                 $("#select_ruta").append("<option value=\"" + item.id + "\">" + item.origen.descripcion + "-->" + item.destino.descripcion + "</option>");
             });
         }
+        
+        function renderListaAvion(listado) {
+            listado.forEach((item)=>{
+               var tr = $("<tr />");
+               // ----Campos de tr----
+               var td_id_avion = $("<td />");
+               td_id_avion.html(item.id);
+               var td_modelo_tipoavion = $("<td />");
+               td_modelo_tipoavion.html(item.tipoAvion_id.modelo);
+               var td_canAsientos_tipoavion = $("<td />");
+               td_canAsientos_tipoavion.html(item.tipoAvion_id.filas * item.tipoAvion_id.asientos_fila);
+               var td_codigos_ruta = $("<td />");
+               td_codigos_ruta.html(item.ruta_id.origen.codigo + "-->" + item.ruta_id.destino.codigo);
+               var td_duracion_ruta = $("<td />");
+               td_duracion_ruta.html(item.ruta_id.duracion.hour + ":" + checkTime(item.ruta_id.duracion.minute));
+               // ----Agregar campos a tr----
+               tr.append(td_id_avion);
+               tr.append(td_modelo_tipoavion);
+               tr.append(td_canAsientos_tipoavion);
+               tr.append(td_codigos_ruta);
+               tr.append(td_duracion_ruta);
+               $("#dtAvion > tbody").append(tr);
+            });
+        }
 
         function renderListaTipoAvion(listado) {
             listado.forEach((item) => {
@@ -285,6 +371,10 @@
                 $("#dtTipoAvion > tbody").append(tr);
             });
         }
+        
+        function checkTime(i) {
+                return (i < 10) ? "0" + i : i;
+            }
 
         //CODIGOS ENVIO MENSAJE: 
         //  *agregarTipoavion
@@ -292,5 +382,6 @@
         //CODIGOS RECEPCION MENSAJE:
         //  1: enviarListaTipoAvion
         //  2: enviarListaRuta
+        //  3: enviarListaAvion
     </script>
 </html>
