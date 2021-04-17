@@ -36,8 +36,6 @@ public class Ruta {
         this.destino = destino;
         this.aviones = aviones;
     }
-    
-    
 
     public int getId() {
         return id;

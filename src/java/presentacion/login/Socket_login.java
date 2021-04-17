@@ -20,7 +20,7 @@ public class Socket_login {
     Controller controller = new Controller();
     @OnOpen
     public void onOpen(Session session){
-        System.out.println(session.getId() + "nueva conexion");
+        System.out.println("Socket_login: "+session.getId() + "nueva conexion");
         try {
             //session.getBasicRemote().sendText("Conexion establecida");
         } catch (Exception e) {
@@ -31,9 +31,6 @@ public class Socket_login {
     @OnMessage
     public void onMessage(String message, Session session){
         try {
-            //System.out.println("Mensaje " + session.getId() + ": " + message); // imprimir por consola el resultado del mensaje
-            //session.getBasicRemote().sendText("Mensaje " + session.getId() + ": " + message);
-            //session.getBasicRemote().sendText(message);
             session.getBasicRemote().sendText(controller.existeUsuario(message));
         } catch (Exception e) {
             e.printStackTrace();
@@ -43,7 +40,7 @@ public class Socket_login {
     
     @OnClose
     public void onClose(Session session){
-        System.out.println("Sesion "+ session.getId()+" terminada");
+        System.out.println("Socket_login: Sesion "+ session.getId()+" terminada");
     }
     
 }

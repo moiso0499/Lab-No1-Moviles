@@ -17,13 +17,13 @@
                         </li>
                         <!-- Items navbar del admin -->
                         <li class="nav-item" id="navbar_li_planes">
-                            <a class="nav-link js-scroll-trigger" href="#">Aviones</a>
+                            <a class="nav-link js-scroll-trigger" href="flota.jsp">Aviones</a>
                         </li>
                         <li class="nav-item" id="navbar_li_locations">
-                            <a class="nav-link js-scroll-trigger" href="#">Rutas</a>
+                            <a class="nav-link js-scroll-trigger" href="ruta.jsp">Rutas</a>
                         </li>
                         <li class="nav-item" id="navbar_li_flights">
-                            <a class="nav-link js-scroll-trigger" href="#">Rutas</a>
+                            <a class="nav-link js-scroll-trigger" href="#">Vuelos</a>
                         </li>
                         <!-- ********************** -->
                         <li class="nav-item" id="navbar_li_login">

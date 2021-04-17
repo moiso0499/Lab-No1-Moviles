@@ -64,7 +64,7 @@ public class Dao_tipoavion extends Dao{
             t.setAnyo(rs.getInt(2));
             t.setModelo(rs.getString(3));
             t.setFilas(rs.getInt(4));
-            t.setAsientos_fila(5);
+            t.setAsientos_fila(rs.getInt(5));
             return t;
         }
         catch(SQLException e){
