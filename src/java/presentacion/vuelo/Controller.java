@@ -20,7 +20,7 @@ import logica.Vuelo;
  */
 public class Controller {
 
-    public void agregarVuelo(String data, String fecha, String hora){
+    public void agregarVuelo(String data, String fecha, String hora) {
         Gson gson = new Gson();
         try {
             Vuelo vuelo = gson.fromJson(data, Vuelo.class);
@@ -31,22 +31,31 @@ public class Controller {
         }
     }
     
+    public void eliminarVuelo(String data){
+        Gson gson = new Gson();
+        try {
+            Vuelo vuelo = gson.fromJson(data, Vuelo.class);
+            Dao_vuelo.eliminarVuelo_id(vuelo.getId());
+        } catch (Exception e) {
+        }
+    }
+
     public String enviarListaAvion() {
         Gson gson = new Gson();
         try {
             List<Avion> lista = Dao_avion.obtenerListaAvion();
-            String json = "{\"codigo\": 1, \"lista\": "+gson.toJson(lista)+"}";
+            String json = "{\"codigo\": 1, \"lista\": " + gson.toJson(lista) + "}";
             return json;
         } catch (Exception e) {
             return gson.toJson(null);
         }
     }
-    
-    public String enviarListaVuelo(){
+
+    public String enviarListaVuelo() {
         Gson gson = new Gson();
         try {
             List<Vuelo> lista = Dao_vuelo.obtenerListaVuelo();
-            String json = "{\"codigo\": 2, \"lista\": "+gson.toJson(lista)+"}";
+            String json = "{\"codigo\": 2, \"lista\": " + gson.toJson(lista) + "}";
             return json;
         } catch (Exception e) {
             return gson.toJson(null);

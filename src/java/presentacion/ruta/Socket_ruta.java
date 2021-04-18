@@ -47,8 +47,13 @@ public class Socket_ruta {
                     session.getBasicRemote().sendText(controller.enviarListaUbicacion());
                     break;
                 }
-                case "agregarRuta":{
+                case "agregarRuta": {
                     controller.agregarRuta(req.get("data").toString(), req.get("duracion").toString());
+                    session.getBasicRemote().sendText(controller.enviarListaRuta());
+                    break;
+                }
+                case "editarRuta": {
+                    controller.editarRuta(req.get("data").toString(), req.get("duracion").toString());
                     session.getBasicRemote().sendText(controller.enviarListaRuta());
                     break;
                 }

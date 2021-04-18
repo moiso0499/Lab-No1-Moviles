@@ -9,6 +9,7 @@
 <html>
     <head>
         <%@include file="/parciales/head.jsp" %>
+        <script src="/Aerolinea/js/login.js"></script>
         <title>Inicio de sesión</title>
     </head>
     <body>
@@ -27,32 +28,10 @@
                     <input type="password" class="form-control" id="password" placeholder="Contraseña">
                 </div>
 
-                <button id="loginButton" type="submit" class="btn btn-primary" onclick="onLogin()">Ingresar</button>
-                <button id="registerButton" type="submit" class="btn btn-success">Registrarse</button>
+                <button id="loginButton" type="button" class="btn btn-primary" onclick="onLogin()">Ingresar</button>
+                <button id="registerButton" type="button" class="btn btn-success" onclick="registro()">Registrarse</button>
             </form>      
         </div>
         <%@include file="/parciales/footer.jsp" %>
-    </body>
-    <script>
-        const websocket = new WebSocket('ws://localhost:8080/Aerolinea/login');
-
-        websocket.addEventListener('open', function (event) {
-            //websocket.send('Servidor abierto'); 
-        });
-
-        websocket.addEventListener('message', function (event) {
-            if (event.data !== null) {
-                sessionStorage.setItem('logueado', event.data);
-                location.replace('index.jsp');
-            }
-        });
-
-        function onLogin() {
-            var i = $("#id").val();
-            var p = $("#password").val();
-            var data = {id: i, clave: p};
-            websocket.send(JSON.stringify(data));
-        }
-
-    </script>    
+    </body> 
 </html>

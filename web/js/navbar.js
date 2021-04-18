@@ -4,20 +4,19 @@
  * and open the template in the editor.
  */
 
-function loadNavbar(){
+function loadNavbar() {
     var logueado = JSON.parse(sessionStorage.getItem('logueado'));
-    
-    if(logueado !== null){
-        document.querySelector("#navbar_li_user > a").innerHTML = logueado.nombre+" "+logueado.apellido;
+
+    if (logueado !== null) {
+        document.querySelector("#navbar_li_user > a").innerHTML = logueado.nombre + " " + logueado.apellido;
         document.getElementById("navbar_li_login").style.display = "none";
         var admin = logueado.admin;
-        if(!admin){
+        if (!admin) {
             document.getElementById("navbar_li_planes").style.display = "none";
             document.getElementById("navbar_li_locations").style.display = "none";
             document.getElementById("navbar_li_flights").style.display = "none";
         }
-    }
-    else{
+    } else {
         document.getElementById("navbar_li_user").style.display = "none";
         document.getElementById("navbar_li_logout").style.display = "none";
         //Admin
@@ -27,7 +26,7 @@ function loadNavbar(){
     }
 }
 
-function logoutOnClick(){
+function logoutOnClick() {
     sessionStorage.removeItem('logueado');
 }
 

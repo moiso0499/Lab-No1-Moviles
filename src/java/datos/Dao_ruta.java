@@ -17,45 +17,53 @@ import logica.Ruta;
  * @author Moi
  */
 public class Dao_ruta extends Dao {
-    
+
     public static void insertarRuta(Ruta r) throws Exception {
         Connection connection = Conn.conectar();
-        String call = String.format(INSERTAR, r.getDuracion(),r.getOrigen().getCodigo(),r.getDestino().getCodigo());
+        String call = String.format(INSERTAR, r.getDuracion(), r.getOrigen().getCodigo(), r.getDestino().getCodigo());
         CallableStatement cs = connection.prepareCall(call);
         cs.executeUpdate();
     }
-    
+
     public static List<Ruta> obtenerListaRuta() throws Exception {
         Connection connection = Conn.conectar();
         List<Ruta> result = new ArrayList<>();
         CallableStatement cs = connection.prepareCall(LISTA);
         ResultSet rs = cs.executeQuery();
-        while(rs.next()){
+        while (rs.next()) {
             result.add(rs_ruta(rs));
         }
         return result;
     }
-    
+
     public static Ruta obtenerRuta_id(int id) throws Exception {
         Connection connection = Conn.conectar();
         Ruta result = null;
         String call = String.format(OBTENER, id);
         CallableStatement cs = connection.prepareCall(call);
         ResultSet rs = cs.executeQuery();
-        if(rs.next()){
+        if (rs.next()) {
             result = rs_ruta(rs);
         }
         return result;
     }
-    
+
     public static void eliminarRuta_id(int id) throws Exception {
         Connection connection = Conn.conectar();
         String call = String.format(ELIMINAR, id);
         CallableStatement cs = connection.prepareCall(call);
         cs.executeUpdate();
     }
-        
-    private static Ruta rs_ruta(ResultSet rs){
+
+    public static void editarRuta(Ruta r) throws Exception {
+        Connection connection = Conn.conectar();
+        String call = EDITAR;
+        call = String.format(call, r.getId(), r.getDuracion(), r.getOrigen().getCodigo(), r.getDestino().getCodigo());
+        CallableStatement cs = connection.prepareCall(call);
+        cs.executeUpdate();
+    }
+
+    private static Ruta rs_ruta(ResultSet rs) {
         try {
             Ruta r = new Ruta();
             r.setId(rs.getInt(1));
@@ -70,9 +78,10 @@ public class Dao_ruta extends Dao {
             return null;
         }
     }
-    
+
     private static final String INSERTAR = "{call insertar_ruta('%s','%s','%s')}";
     private static final String LISTA = "{call mostrar_rutas()}";
     private static final String OBTENER = "{call obtener_ruta(%s)}";
     private static final String ELIMINAR = "{call eliminar_ruta(%s)}";
+    private static final String EDITAR = "{call editar_ruta(%s,'%s','%s','%s')}";
 }

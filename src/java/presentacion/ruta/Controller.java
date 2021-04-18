@@ -64,4 +64,14 @@ public class Controller {
         }
     }
     
+    public void editarRuta(String data, String duracion){
+        Gson gson = new Gson();
+        try {
+            Ruta ruta = gson.fromJson(data, Ruta.class);
+            ruta.setDuracion(LocalTime.parse(duracion));
+            Dao_ruta.editarRuta(ruta);
+        } catch (Exception e) {
+        }
+    }
+    
 }

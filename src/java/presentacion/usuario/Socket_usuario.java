@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package presentacion.vuelo;
+package presentacion.usuario;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
@@ -18,20 +18,14 @@ import org.json.simple.JSONObject;
  *
  * @author Moi
  */
-@ServerEndpoint("/vuelo")
-public class Socket_vuelo {
+@ServerEndpoint("/usuario")
+public class Socket_usuario {
 
     Controller controller = new Controller();
 
     @OnOpen
     public void onOpen(Session session) {
-        System.out.println("Socket_vuelo: " + session.getId() + " nueva conexion");
-        try {
-            session.getBasicRemote().sendText(controller.enviarListaAvion());
-            session.getBasicRemote().sendText(controller.enviarListaVuelo());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        System.out.println("Socket_usuario: " + session.getId() + " nueva conexion");
     }
 
     @OnMessage
@@ -42,13 +36,8 @@ public class Socket_vuelo {
             JSONObject req = new JSONObject(map);
             String action = req.get("action").toString();
             switch (action) {
-                case "agregarVuelo": {
-                    controller.agregarVuelo(req.get("data").toString(), req.get("date").toString(), req.get("time").toString());
-                    session.getBasicRemote().sendText(controller.enviarListaVuelo());
-                }
-                case "eliminarVuelo" : {
-                    controller.eliminarVuelo(req.get("data").toString());
-                    session.getBasicRemote().sendText(controller.enviarListaVuelo());
+                case "ingresarUsuario": {
+                    session.getBasicRemote().sendText(controller.ingresarUsuario(req.get("data").toString()));
                 }
             }
         } catch (Exception e) {
@@ -57,6 +46,6 @@ public class Socket_vuelo {
 
     @OnClose
     public void onClose(Session session) {
-        System.out.println("Socket_vuelo: Sesion " + session.getId() + " terminada");
+        System.out.println("Socket_usuario: Sesion " + session.getId() + " terminada");
     }
 }
