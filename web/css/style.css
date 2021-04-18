@@ -17,15 +17,31 @@ and open the template in the editor.
 }
 
 .myForm {
-                width: 50%;
-                padding:10px;
-                border:1px solid #eee;
-                margin:10px;
-                margin-left: 25%;
-                background-color: lightgray;
-            }
-            
-            .myTitle {
-                margin-bottom: 20px;
-                margin-left: 25%;
-            }
+    width: 50%;
+    padding:10px;
+    border:1px solid #eee;
+    margin:10px;
+    margin-left: 25%;
+    background-color: lightgray;
+}
+
+.myTitle {
+    margin-bottom: 20px;
+    margin-left: 25%;
+}
+
+.tdEliminar {
+    color: rgb(204, 0, 0);
+}
+
+.tdEliminar:hover {
+    color: rgb(0, 0, 102)
+}
+
+.tdEditar {
+    color: rgb(0, 204, 0);
+}
+
+.tdEditar:hover {
+    color: rgb(0, 0, 102)
+}

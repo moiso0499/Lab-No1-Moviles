@@ -12,4 +12,5 @@
 <script src="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css"></script>
 <script src="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="/Aerolinea/js/navbar.js"></script>

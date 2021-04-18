@@ -153,6 +153,9 @@
                                     <th class="th-sm">Asientos por Fila
 
                                     </th>
+                                    <th class="th-sm">...
+
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -168,6 +171,8 @@
                                     <th>No. Filas
                                     </th>
                                     <th>Asientos por Fila
+                                    </th>
+                                    <th>
                                     </th>
                                 </tr>
                             </tfoot>
@@ -211,7 +216,7 @@
                     </form>
                 </div>
                 <div id="tab_PlaneList" class="container tab-pane fade"><br>
-                    <h3>Ver Tipos de Aviones</h3>
+                    <h3>Ver Aviones</h3>
                     <div class="table-responsive">
                         <table id="dtAvion" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
                             <thead>
@@ -231,6 +236,12 @@
                                     <th class="th-sm">Duración Ruta
 
                                     </th>
+                                    <th class="th-sm">...
+
+                                    </th>
+                                    <th class="th-sm">...
+
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -247,6 +258,10 @@
                                     </th>
                                     <th>Duración Ruta
                                     </th>
+                                    <th>
+                                    </th>
+                                    <th>
+                                    </th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -254,9 +269,53 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div id="modal_editarAvion" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="modal-title_editarAvion">Editar Avión</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal">
+                            <fieldset>
+                                <!-- Select Basic -->
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="select_tipoavion_edit">Tipo de Avión</label>
+                                    <div class="col-md-5">
+                                        <select id="select_tipoavion_edit" name="select_tipoavion_edit" class="form-control">
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Select Basic -->
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="select_ruta_edit">Ruta Asignada</label>
+                                    <div class="col-md-5">
+                                        <select id="select_ruta_edit" name="select_ruta_edit" class="form-control">
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal" onclick="editarAvion()">Editar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
         <%@include file="/parciales/footer.jsp" %>
     </body>
     <script>
+
         //Websocket tipoAvion
         const websocket = new WebSocket('ws://localhost:8080/Aerolinea/tipoavion');
 
@@ -267,19 +326,26 @@
                 {
                     $("#dtTipoAvion > tbody").html("");
                     renderListaTipoAvion(mensaje.lista);
-                    renderSelectTipoAvion(mensaje.lista);
+                    //----
+                    var select_tipoavion = $("#select_tipoavion");
+                    renderSelectTipoAvion(select_tipoavion, mensaje.lista);
+                    var select_tipoavion_edit = $("#select_tipoavion_edit");
+                    renderSelectTipoAvion(select_tipoavion_edit, mensaje.lista);
                     $('#dtTipoAvion').DataTable();
                     $('.dataTables_length').addClass('bs-select');
                     break;
                 }
                 case 2:
                 {
-                    renderSelectRuta(mensaje.lista);
+                    var select_ruta = $("#select_ruta");
+                    renderSelectRuta(select_ruta, mensaje.lista);
+                    var select_ruta_edit = $("#select_ruta_edit");
+                    renderSelectRuta(select_ruta_edit, mensaje.lista);
                     break;
                 }
                 case 3:
                 {
-                    $("#dtAvion > body").html("");
+                    $("#dtAvion > tbody").html("");
                     renderListaAvion(mensaje.lista);
                     $('#dtAvion').DataTable();
                     $('.dataTables_length').addClass('bs-select');
@@ -310,41 +376,59 @@
             }
         }
 
-        function renderSelectTipoAvion(listado) {
-            $("#select_tipoavion").html("");
+        function renderSelectTipoAvion(select, listado) {
+            $(select).html("");
             listado.forEach((item) => {
-                $("#select_tipoavion").append("<option value=\"" + item.id + "\">" + item.modelo + "</option>");
+                $(select).append("<option value=\"" + item.id + "\">" + item.modelo + "</option>");
             });
         }
 
-        function renderSelectRuta(listado) {
-            $("#select_ruta").html("");
+        function renderSelectRuta(select, listado) {
+            $(select).html("");
             listado.forEach((item) => {
-                $("#select_ruta").append("<option value=\"" + item.id + "\">" + item.origen.descripcion + "-->" + item.destino.descripcion + "</option>");
+                $(select).append("<option value=\"" + item.id + "\">" + item.origen.descripcion + "-->" + item.destino.descripcion + "</option>");
             });
         }
-        
+
         function renderListaAvion(listado) {
-            listado.forEach((item)=>{
-               var tr = $("<tr />");
-               // ----Campos de tr----
-               var td_id_avion = $("<td />");
-               td_id_avion.html(item.id);
-               var td_modelo_tipoavion = $("<td />");
-               td_modelo_tipoavion.html(item.tipoAvion_id.modelo);
-               var td_canAsientos_tipoavion = $("<td />");
-               td_canAsientos_tipoavion.html(item.tipoAvion_id.filas * item.tipoAvion_id.asientos_fila);
-               var td_codigos_ruta = $("<td />");
-               td_codigos_ruta.html(item.ruta_id.origen.codigo + "-->" + item.ruta_id.destino.codigo);
-               var td_duracion_ruta = $("<td />");
-               td_duracion_ruta.html(item.ruta_id.duracion.hour + ":" + checkTime(item.ruta_id.duracion.minute));
-               // ----Agregar campos a tr----
-               tr.append(td_id_avion);
-               tr.append(td_modelo_tipoavion);
-               tr.append(td_canAsientos_tipoavion);
-               tr.append(td_codigos_ruta);
-               tr.append(td_duracion_ruta);
-               $("#dtAvion > tbody").append(tr);
+            listado.forEach((item) => {
+                var tr = $("<tr />");
+                // ----Campos de tr----
+                var td_id_avion = $("<td />");
+                td_id_avion.html(item.id);
+                var td_modelo_tipoavion = $("<td />");
+                td_modelo_tipoavion.html(item.tipoAvion_id.modelo);
+                var td_canAsientos_tipoavion = $("<td />");
+                td_canAsientos_tipoavion.html(item.tipoAvion_id.filas * item.tipoAvion_id.asientos_fila);
+                var td_codigos_ruta = $("<td />");
+                td_codigos_ruta.html(item.ruta_id.origen.codigo + "-->" + item.ruta_id.destino.codigo);
+                var td_duracion_ruta = $("<td />");
+                td_duracion_ruta.html(item.ruta_id.duracion.hour + ":" + checkTime(item.ruta_id.duracion.minute));
+                // ----Botón eliminar ----------
+                var td_eliminar = $("<td />");
+                $(td_eliminar).addClass("tdEliminar");
+                td_eliminar.html('<i class="fa fa-trash"></i>');
+                td_eliminar.on("click", () => {
+                    eliminarAvion(item);
+                });
+                // ----Botón editar ----------
+                var td_editar = $("<td />");
+                $(td_editar).addClass("tdEditar");
+                td_editar.html('<i class="fa fa-edit"></i>');
+                $(td_editar).attr("data-toggle", "modal");
+                $(td_editar).attr("data-target", "#modal_editarAvion");
+                td_editar.on("click", () => {
+                    sessionStorage.setItem("id_avionEditar", item.id.toString());
+                });
+                // ----Agregar campos a tr----
+                tr.append(td_id_avion);
+                tr.append(td_modelo_tipoavion);
+                tr.append(td_canAsientos_tipoavion);
+                tr.append(td_codigos_ruta);
+                tr.append(td_duracion_ruta);
+                tr.append(td_eliminar);
+                tr.append(td_editar);
+                $("#dtAvion > tbody").append(tr);
             });
         }
 
@@ -362,19 +446,63 @@
                 td_filas_tipoavion.html(item.filas);
                 var td_asientosFila_tipoavion = $("<td />");
                 td_asientosFila_tipoavion.html(item.asientos_fila);
+                // ----Botón con el evento asociado ----------
+                var td_eliminar = $("<td />");
+                $(td_eliminar).addClass("tdEliminar");
+                td_eliminar.html('<i class="fa fa-trash"></i>');
+                td_eliminar.on("click", () => {
+                    eliminarTipoavion(item);
+                });
                 // ----Agregar campos a tr----
                 tr.append(td_id_tipoavion);
                 tr.append(td_anyo_tipoavion);
                 tr.append(td_modelo_tipoavion);
                 tr.append(td_filas_tipoavion);
                 tr.append(td_asientosFila_tipoavion);
+                tr.append(td_eliminar);
                 $("#dtTipoAvion > tbody").append(tr);
             });
         }
-        
-        function checkTime(i) {
-                return (i < 10) ? "0" + i : i;
+
+        function editarAvion() {
+            var id_avion = parseInt(sessionStorage.getItem("id_avionEditar"));
+            var select_tipoavion_edit = $("#select_tipoavion_edit option:selected").val();
+            var select_ruta_edit = $("#select_ruta_edit option:selected").val();
+            var avion = {id: id_avion, tipoAvion_id: {id: select_tipoavion_edit}, ruta_id: {id: select_ruta_edit}};
+            var message = {action: "editarAvion", data: avion};
+            websocket.send(JSON.stringify(message));
+            alert("Avion editado correctamente");
+        }
+
+        function eliminarTipoavion(tipo) {
+            if (confirm("¿Está seguro de eliminar a " + tipo.id + "-" + tipo.modelo + "?")) {
+                var eliminar = {id: tipo.id};
+                var mensaje = {action: "eliminarTipoavion", data: eliminar};
+                websocket.send(JSON.stringify(mensaje));
+                alert("Eliminado con éxito");
+            } else {
+                return;
             }
+        }
+
+        function eliminarAvion(avion) {
+            if (confirm("¿Está seguro de eliminar a " + avion.id + "-" + avion.tipoAvion_id.modelo + "-" + avion.ruta_id.origen.codigo + "->" + avion.ruta_id.destino.codigo + " ?")) {
+                var eliminar = {id: avion.id};
+                var mensaje = {action: "eliminarAvion", data: eliminar};
+                websocket.send(JSON.stringify(mensaje));
+                alert("Eliminado con éxito");
+            } else {
+                return;
+            }
+        }
+
+        function checkTime(i) {
+            return (i < 10) ? "0" + i : i;
+        }
+
+        function loadEvents() {
+
+        }
 
         //CODIGOS ENVIO MENSAJE: 
         //  *agregarTipoavion

@@ -13,46 +13,47 @@ import java.util.List;
 import logica.Avion;
 import logica.Ruta;
 import logica.Tipoavion;
+
 /**
  *
  * @author Moi
  */
 public class Controller {
-    
-    public String enviarListaTipoAvion(){
+
+    public String enviarListaTipoAvion() {
         Gson gson = new Gson();
         try {
             List<Tipoavion> lista = Dao_tipoavion.obtenerListaTipoavion();
-            String json = "{\"codigo\": 1, \"lista\": "+ gson.toJson(lista) + "}";
+            String json = "{\"codigo\": 1, \"lista\": " + gson.toJson(lista) + "}";
             return json;
         } catch (Exception e) {
             return gson.toJson(null);
         }
     }
-    
-    public String enviarListaRuta(){
+
+    public String enviarListaRuta() {
         Gson gson = new Gson();
         try {
             List<Ruta> lista = Dao_ruta.obtenerListaRuta();
-            String json = "{\"codigo\": 2, \"lista\": "+gson.toJson(lista)+"}";
+            String json = "{\"codigo\": 2, \"lista\": " + gson.toJson(lista) + "}";
             return json;
         } catch (Exception e) {
             return gson.toJson(null);
         }
     }
-    
-    public String enviarListaAvion(){
+
+    public String enviarListaAvion() {
         Gson gson = new Gson();
         try {
             List<Avion> lista = Dao_avion.obtenerListaAvion();
-            String json = "{\"codigo\": 3, \"lista\": " +gson.toJson(lista)+"}";
+            String json = "{\"codigo\": 3, \"lista\": " + gson.toJson(lista) + "}";
             return json;
         } catch (Exception e) {
             return gson.toJson(null);
         }
     }
-    
-    public void agregarAvion(String data){
+
+    public void agregarAvion(String data) {
         Gson gson = new Gson();
         try {
             Avion avion = gson.fromJson(data, Avion.class);
@@ -60,8 +61,8 @@ public class Controller {
         } catch (Exception e) {
         }
     }
-    
-    public void agregarTipoavion(String data){
+
+    public void agregarTipoavion(String data) {
         Gson gson = new Gson();
         try {
             Tipoavion tipoavion = gson.fromJson(data, Tipoavion.class);
@@ -69,5 +70,32 @@ public class Controller {
         } catch (Exception e) {
         }
     }
+
+    public void eliminarAvion(String data) {
+        Gson gson = new Gson();
+        try {
+            Avion avion = gson.fromJson(data, Avion.class);
+            Dao_avion.eliminarAvion_id(avion.getId());
+        } catch (Exception e) {
+        }
+    }
     
+    public void editarAvion(String data){
+        Gson gson = new Gson();
+        try {
+            Avion avion = gson.fromJson(data, Avion.class);
+            Dao_avion.editarAvion(avion);
+        } catch (Exception e) {
+        }
+    }
+
+    public void eliminarTipoavion(String data) {
+        Gson gson = new Gson();
+        try {
+            Tipoavion tipoavion = gson.fromJson(data, Tipoavion.class);
+            Dao_tipoavion.eliminarTipoavion_id(tipoavion.getId());
+        } catch (Exception e) {
+        }
+    }
+
 }

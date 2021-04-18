@@ -50,8 +50,24 @@ public class Socket_tipoavion {
                     session.getBasicRemote().sendText(controller.enviarListaTipoAvion());
                     break;
                 }
-                case "agregarAvion":{
+                case "agregarAvion": {
                     controller.agregarAvion(req.get("data").toString());
+                    session.getBasicRemote().sendText(controller.enviarListaAvion());
+                    break;
+                }
+                case "eliminarTipoavion": {
+                    controller.eliminarTipoavion(req.get("data").toString());
+                    session.getBasicRemote().sendText(controller.enviarListaTipoAvion());
+                    session.getBasicRemote().sendText(controller.enviarListaAvion());
+                    break;
+                }
+                case "eliminarAvion": {
+                    controller.eliminarAvion(req.get("data").toString());
+                    session.getBasicRemote().sendText(controller.enviarListaAvion());
+                    break;
+                }
+                case "editarAvion": {
+                    controller.editarAvion(req.get("data").toString());
                     session.getBasicRemote().sendText(controller.enviarListaAvion());
                     break;
                 }
