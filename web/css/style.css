@@ -8,6 +8,10 @@ and open the template in the editor.
     Author     : Moi
 */
 
+body{
+    background-image: url("../images/plane-828826_1920.jpg");
+}
+
 .clear {
     clear:both;
 }

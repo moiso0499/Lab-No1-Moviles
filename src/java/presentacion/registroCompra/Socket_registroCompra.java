@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package presentacion.compra;
+package presentacion.registroCompra;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
@@ -18,20 +18,22 @@ import org.json.simple.JSONObject;
  *
  * @author Moi
  */
-@ServerEndpoint("/compra")
-public class Socket_compra {
 
+@ServerEndpoint("/registro_compra")
+public class Socket_registroCompra {
+    
     Controller controller = new Controller();
-
+    
     @OnOpen
     public void onOpen(Session session) {
-        System.out.println("Socket_compra: " + session.getId() + " nueva conexion");
+        System.out.println("Socket_registro_compra: " + session.getId() + " nueva conexion");
         try {
-            session.getBasicRemote().sendText(controller.enviarListaUbicacion());
+            
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-
+    
     @OnMessage
     public void onMessage(String message, Session session) {
         ObjectMapper mapper = new ObjectMapper();
@@ -40,26 +42,17 @@ public class Socket_compra {
             JSONObject req = new JSONObject(map);
             String action = req.get("action").toString();
             switch (action) {
-                case "filtrarVuelo": {
-                    session.getBasicRemote().sendText(controller.filtrarVuelo(req.get("data").toString(), req.get("date").toString()));
-                    break;
+                case "obtenerListaCompra": {
+                    session.getBasicRemote().sendText(controller.enviarListaCompraUsuario(req.get("data").toString()));
                 }
-                case "obtenerTiquetesVuelo": {
-                    session.getBasicRemote().sendText(controller.enviarListaTiquetesVuelo(req.get("data").toString()));
-                    break;
-                }
-                case "agregarCompra": {
-                    session.getBasicRemote().sendText(controller.guardarCompra(req.get("data").toString(), req.get("lista_tiquete").toString()));
-                    break;
-                }
+                
             }
         } catch (Exception e) {
         }
     }
-
+    
     @OnClose
     public void onClose(Session session) {
-        System.out.println("Socket_compra: Sesion " + session.getId() + " terminada");
+        System.out.println("Socket_registro_compra: Sesion " + session.getId() + " terminada");
     }
-
 }

@@ -6,11 +6,15 @@
 package presentacion.compra;
 
 import com.google.gson.Gson;
+import datos.Dao_compra;
 import datos.Dao_tiquete;
 import datos.Dao_ubicacion;
 import datos.Dao_vuelo;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import logica.Compra;
 import logica.Ruta;
 import logica.Tiquete;
 import logica.Ubicacion;
@@ -53,6 +57,26 @@ public class Controller {
             return json;
         } catch (Exception e) {
             return gson.toJson(null);
+        }
+    }
+    
+    public String guardarCompra(String data, String tiquetes){
+        Gson gson = new Gson();
+        try {
+            int id_compra = Dao_compra.cantidadActualCompras() + 1;
+            // --
+            Compra compra = gson.fromJson(data, Compra.class);
+            Dao_compra.insertarCompra(compra);
+            Tiquete[] mcArray = gson.fromJson(tiquetes, Tiquete[].class);
+            List<Tiquete> lista = Arrays.asList(mcArray);
+            for (Tiquete t : lista) {
+                t.setCompra_id(compra);
+                Dao_tiquete.insertarTiquete(t, id_compra);
+            }
+            
+            return "{\"codigo\": 4}";
+        } catch (Exception e) {
+            return "{\"codigo\": 5}";
         }
     }
 }

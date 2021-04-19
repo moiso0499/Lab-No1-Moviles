@@ -13,7 +13,13 @@
     </head>
     <body>
         <%@include file="/parciales/navbar.jsp" %>
-        <h1>Hello World</h1>
+        <div class="container">
+            <div class="jumbotron">
+                <h1 class="display-3">Aerolíneas TAKAKO</h1>
+                <p class="lead">En Aerolíneas TAKAKO siempre es un placer atenderlo. Por favor sírvase de explorar nuestro sitio todo lo que desee.<div>Próximamente estaremos agregando nuevas funcionalidades bastante agradables, así como una aplicación para móviles, con el fin de que pueda efectuar su reserva desde cualquier lugar, fácil y rápido.</div></p>
+
+            </div>
+        </div>
         <%@include file="/parciales/footer.jsp" %>
     </body>
 </html>

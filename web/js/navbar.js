@@ -18,11 +18,13 @@ function loadNavbar() {
         }
         else{
             document.getElementById("navbar_li_checkFlights").style.display = "none";
+            document.getElementById("navbar_li_checkBooks").style.display = "none";
         }
     } else {
         document.getElementById("navbar_li_user").style.display = "none";
         document.getElementById("navbar_li_logout").style.display = "none";
         document.getElementById("navbar_li_checkFlights").style.display = "none";
+        document.getElementById("navbar_li_checkBooks").style.display = "none";
         //Admin
         document.getElementById("navbar_li_planes").style.display = "none";
         document.getElementById("navbar_li_locations").style.display = "none";

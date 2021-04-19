@@ -11,50 +11,51 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import logica.Tiquete;
+
 /**
  *
  * @author Moi
  */
 public class Dao_tiquete extends Dao {
-    
-    public static void insertarTiquete(Tiquete t) throws Exception {
+
+    public static void insertarTiquete(Tiquete t, int id) throws Exception {
         Connection connection = Conn.conectar();
-        String call = String.format(INSERTAR, t.getCompra_id().getId(),t.getAsiento(),t.getVuelo_id().getId());
+        String call = String.format(INSERTAR, id, t.getAsiento(), t.getVuelo_id().getId());
         CallableStatement cs = connection.prepareCall(call);
         cs.executeUpdate();
     }
-    
+
     public static List<Tiquete> obtenerListaTiquete_compra(int id) throws Exception {
         Connection connection = Conn.conectar();
         List<Tiquete> result = new ArrayList<>();
         String call = String.format(TIQUETES_COMPRA, id);
         CallableStatement cs = connection.prepareCall(call);
         ResultSet rs = cs.executeQuery();
-        while(rs.next()){
+        while (rs.next()) {
             result.add(rs_tiquete(rs));
         }
         return result;
     }
-    
-     public static List<Tiquete> obtenerListaTiquete_vuelo(int id) throws Exception {
+
+    public static List<Tiquete> obtenerListaTiquete_vuelo(int id) throws Exception {
         Connection connection = Conn.conectar();
-         List<Tiquete> result = new ArrayList<>();
+        List<Tiquete> result = new ArrayList<>();
         String call = String.format(TIQUETES_VUELO, id);
         CallableStatement cs = connection.prepareCall(call);
         ResultSet rs = cs.executeQuery();
-        while(rs.next()){
+        while (rs.next()) {
             result.add(rs_tiquete(rs));
         }
         return result;
     }
-     
-     public static void eliminarTiquetes_compra(int id) throws Exception {
+
+    public static void eliminarTiquetes_compra(int id) throws Exception {
         Connection connection = Conn.conectar();
         String call = String.format(ELIMINAR, id);
         CallableStatement cs = connection.prepareCall(call);
         cs.executeUpdate();
     }
-    
+
     private static Tiquete rs_tiquete(ResultSet rs) {
         try {
             Tiquete t = new Tiquete();
@@ -71,7 +72,7 @@ public class Dao_tiquete extends Dao {
             return null;
         }
     }
-    
+
     private static final String INSERTAR = "{call insertar_tiquete(%s,%s,%s)}";
     private static final String TIQUETES_COMPRA = "{call tiquetes_compra(%s)}";
     private static final String TIQUETES_VUELO = "{call tiquetes_vuelo(%s)}";

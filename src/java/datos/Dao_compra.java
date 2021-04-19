@@ -81,6 +81,16 @@ public class Dao_compra extends Dao {
         cs.executeUpdate();
     }
     
+    public static int cantidadActualCompras() throws Exception {
+        Connection connection = Conn.conectar();
+        CallableStatement cs = connection.prepareCall("{call cantidad_compras()}");
+        ResultSet rs = cs.executeQuery();
+        if(rs.next()){
+            return rs.getInt(1);
+        }
+        return -1;
+    }
+    
     private static Compra rs_compra(ResultSet rs) {
         try {
             Compra c = new Compra();
