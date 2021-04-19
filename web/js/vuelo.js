@@ -109,6 +109,7 @@ function renderSelectAvion(select, lista) {
 $("document").ready(() => {
     var today = new Date().toISOString().split('T')[0];
     $("#input_fecha").val(today);
+    $("#input_fecha").attr("min",today);
 
     $(function () {
         var d = new Date(),

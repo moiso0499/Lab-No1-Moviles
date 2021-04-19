@@ -106,6 +106,8 @@
                 case 1:
                 {
                     alert("Usuario registrado correctamente");
+                    sessionStorage.setItem('logueado', JSON.stringify(mensaje.usuario));
+                    location.replace("index.jsp");
                     break;
                 }
                 case 2:

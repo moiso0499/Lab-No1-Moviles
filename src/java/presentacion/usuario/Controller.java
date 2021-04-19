@@ -14,13 +14,14 @@ import logica.Usuario;
  * @author Moi
  */
 public class Controller {
-    
-    public String ingresarUsuario(String data){
+
+    public String ingresarUsuario(String data) {
         Gson gson = new Gson();
         try {
-           Usuario usuario = gson.fromJson(data, Usuario.class);
-           Dao_usuario.insertarUsuario(usuario);
-           return "{\"codigo\": 1}";
+            Usuario usuario = gson.fromJson(data, Usuario.class);
+            Dao_usuario.insertarUsuario(usuario);
+            Usuario registrado = Dao_usuario.obtenerUsuario_id(usuario.getId());
+            return "{\"codigo\": 1, \"usuario\": " + gson.toJson(registrado) + "}";
         } catch (Exception e) {
             return "{\"codigo\": 2}";
         }

@@ -26,6 +26,10 @@
                             <a class="nav-link js-scroll-trigger" href="vuelo.jsp">Vuelos</a>
                         </li>
                         <!-- ********************** -->
+                        <li class="nav-item" id="navbar_li_checkFlights">
+                            <a class="nav-link js-scroll-trigger" href="ver_vuelo.jsp">Ver Vuelos</a>
+                        </li>
+                        <!-- Aquí debo agregar los tabs del usuario -->
                         <li class="nav-item" id="navbar_li_login">
                             <a class="nav-link js-scroll-trigger" href="login.jsp">Login</a>
                         </li>

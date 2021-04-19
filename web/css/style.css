@@ -38,6 +38,14 @@ and open the template in the editor.
     color: rgb(0, 0, 102)
 }
 
+.tdComprar{
+    color: rgb(0, 153, 0);
+}
+
+.tdComprar:hover{
+    color: rgb(153, 0, 204);
+}
+
 .tdEditar {
     color: rgb(0, 204, 0);
 }
